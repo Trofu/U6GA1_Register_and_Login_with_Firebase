@@ -2,93 +2,70 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../date/counties.dart';
 
-class ProvinciasScreen extends StatefulWidget{
-
-  const ProvinciasScreen({Key?key}): super(key: key);
+class ProvinciasScreen extends StatefulWidget {
+  const ProvinciasScreen({Key? key}) : super(key: key);
 
   @override
   State<ProvinciasScreen> createState() => _ProvinciasScreenState();
 }
 
 class _ProvinciasScreenState extends State<ProvinciasScreen> {
+  // Método para construir cada provincia como un widget
+  Widget buildProvincias(Map<String, dynamic> provincia) {
+    return Column(
+      children: [
+        ClipOval(
+          child: Container(
+            height: 175, // Altura para definir la elipse
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(provincia["img"]),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Center(
+              child: Text(
+                provincia["provincia"],
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black, // Sombra negra para el texto
+                      blurRadius: 4, // Difuminado de la sombra del texto
+                      offset: Offset(2, 3), // Desplazamiento de la sombra del texto
+                    ),
+                  ],
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 20.0), // Espaciado entre elementos
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+       title: const Text(
+         "Provincias"
+       ),
+        centerTitle: true,
+      ),
       body: SafeArea(
-        child: ListView(
+        child: ListView.builder(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          children: [
-            Center(
-              child: Column(
-                children: [
-                  ClipOval(
-                    child: Container(
-                      height: 200, // Ajusta la altura para definir la elipse
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(provincies["provincies"][2]["img"]),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          provincies["provincies"][2]["provincia"],
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20.0,),
-                  ClipOval(
-                    child: Container(
-                      height: 200, // Ajusta la altura para definir la elipse
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(provincies["provincies"][0]["img"]),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          provincies["provincies"][0]["provincia"],
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20.0,),
-                  ClipOval(
-                    child: Container(
-                      height: 200, // Ajusta la altura para definir la elipse
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(provincies["provincies"][1]["img"]),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          provincies["provincies"][1]["provincia"],
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        )
+          itemCount: provincies["provincies"].length, // Iteramos sobre las provincias
+          itemBuilder: (context, index) {
+            final provincia = provincies["provincies"][index];
+            return buildProvincias(provincia);
+          },
+        ),
       ),
     );
   }
