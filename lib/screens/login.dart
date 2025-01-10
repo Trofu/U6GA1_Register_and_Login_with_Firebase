@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget{
 
@@ -81,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ElevatedButton(
                         child: const Text("NEXT"),
                         onPressed: () {
-                          // Navigator.pop(context);
+                          context.push("/provincias");
                         },
                       )
                     ],

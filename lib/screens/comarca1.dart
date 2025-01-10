@@ -4,14 +4,26 @@ import 'package:flutter/material.dart';
 import '../date/counties.dart';
 
 class InfoComarca1Screen extends StatefulWidget {
-  const InfoComarca1Screen({Key? key}) : super(key: key);
+  final int comarca;
+  final int provincia;
+
+  const InfoComarca1Screen(
+      {Key? key, required this.comarca, required this.provincia})
+      : super(key: key);
 
   @override
-  State<InfoComarca1Screen> createState() => _InfoComarca1ScreenState();
+  State<InfoComarca1Screen> createState() =>
+      _InfoComarca1ScreenState(provincia, comarca);
 }
 
 class _InfoComarca1ScreenState extends State<InfoComarca1Screen> {
-  final comarca = provincies["provincies"][0]["comarques"][0];
+  late final comarca;
+  late final int provinciaId;
+  late final int comarcaId;
+
+  _InfoComarca1ScreenState(this.provinciaId, this.comarcaId) {
+    this.comarca = provincies["provincies"][provinciaId]["comarques"][comarcaId];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +47,8 @@ class _InfoComarca1ScreenState extends State<InfoComarca1Screen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0), // Padding para toda la columna de textos
+                  padding: const EdgeInsets.all(8.0),
+                  // Padding para toda la columna de textos
                   child: Column(
                     children: [
                       Align(

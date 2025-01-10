@@ -4,16 +4,26 @@ import 'package:flutter/material.dart';
 import '../date/counties.dart';
 
 class InfoComarca2Screen extends StatefulWidget{
+  final int comarca;
+  final int provincia;
 
-  const InfoComarca2Screen({Key?key}): super(key: key);
+  const InfoComarca2Screen(
+      {Key? key, required this.comarca, required this.provincia})
+      : super(key: key);
 
   @override
-  State<InfoComarca2Screen> createState() => _InfoComarca2ScreenState();
+  State<InfoComarca2Screen> createState() => _InfoComarca2ScreenState(provincia, comarca);
 }
 
 class _InfoComarca2ScreenState extends State<InfoComarca2Screen> {
 
-  final comarca= provincies["provincies"][0]["comarques"][0];
+  late final comarca;
+  late final int provinciaId;
+  late final int comarcaId;
+
+  _InfoComarca2ScreenState(this.provinciaId, this.comarcaId) {
+    comarca = provincies["provincies"][provinciaId]["comarques"][comarcaId];
+  }
 
   @override
   Widget build(BuildContext context) {

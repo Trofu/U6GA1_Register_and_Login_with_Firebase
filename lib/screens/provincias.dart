@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../date/counties.dart';
 
 class ProvinciasScreen extends StatefulWidget {
@@ -11,7 +12,7 @@ class ProvinciasScreen extends StatefulWidget {
 
 class _ProvinciasScreenState extends State<ProvinciasScreen> {
   // Método para construir cada provincia como un widget
-  Widget buildProvincias(Map<String, dynamic> provincia) {
+  Widget buildProvincias(Map<String, dynamic> provincia,int indice) {
     return Column(
       children: [
         ClipOval(
@@ -24,22 +25,28 @@ class _ProvinciasScreenState extends State<ProvinciasScreen> {
               ),
             ),
             child: Center(
-              child: Text(
-                provincia["provincia"],
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black, // Sombra negra para el texto
-                      blurRadius: 4, // Difuminado de la sombra del texto
-                      offset: Offset(2, 3), // Desplazamiento de la sombra del texto
-                    ),
-                  ],
+              child: TextButton(
+                onPressed: () {
+                  String ruta = "/provincias/$indice/comarcas";
+                  context.push(ruta);
+                },
+                child: Text(
+                  provincia["provincia"],
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black, // Sombra negra para el texto
+                        blurRadius: 4, // Difuminado de la sombra del texto
+                        offset: Offset(2, 3), // Desplazamiento de la sombra del texto
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
+              )
             ),
           ),
         ),
@@ -63,7 +70,7 @@ class _ProvinciasScreenState extends State<ProvinciasScreen> {
           itemCount: provincies["provincies"].length, // Iteramos sobre las provincias
           itemBuilder: (context, index) {
             final provincia = provincies["provincies"][index];
-            return buildProvincias(provincia);
+            return buildProvincias(provincia,index);
           },
         ),
       ),
