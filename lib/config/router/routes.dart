@@ -1,6 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:u3ga1/screens/comarca1.dart';
-import 'package:u3ga1/screens/comarca2.dart';
+import 'package:u3ga1/screens/comarca.dart';
 import 'package:u3ga1/screens/comarcas.dart';
 import 'package:u3ga1/screens/login.dart';
 import 'package:u3ga1/screens/provincias.dart';
@@ -26,21 +25,12 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
-      name: 'informacion1',
+      name: 'informacion',
       path: '/provincias/:proId/comarca/:comId',
       builder: (context, state) {
         final String proId = state.pathParameters['proId']!;
         final String comId = state.pathParameters['comId']!;
-        return InfoComarca1Screen(comarca: int.parse(comId),provincia: int.parse(proId));
-      },
-    ),
-    GoRoute(
-      name: 'informacion2',
-      path: '/provincias/:proId/comarca/:comId/tiempo',
-      builder: (context, state) {
-        final String proId = state.pathParameters['proId']!;
-        final String comId = state.pathParameters['comId']!;
-        return InfoComarca2Screen(comarca: int.parse(comId),provincia: int.parse(proId));
+        return ComarcaInfo(comarca: int.parse(comId),provincia: int.parse(proId));
       },
     ),
   ],
