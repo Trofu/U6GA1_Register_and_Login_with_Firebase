@@ -72,7 +72,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       ElevatedButton(
                         child: const Text("Sign Up"),
                         onPressed: () {
-                          context.push("/login");
+                          if(user.text == null || pass.text == null){
+                            return;
+                          }
+                          context.push("/${user.text}/${pass.text}");
                         },
                       ),
                       TextButton(

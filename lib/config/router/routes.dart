@@ -10,11 +10,15 @@ final GoRouter router = GoRouter(
     GoRoute(
       name: 'login',
       path: '/', // Ruta raíz o Home
-      builder: (context, state) => const LoginScreen("",""),
+      builder: (context, state) => const LoginScreen(user: '', password: '',),
     ),GoRoute(
-      name: 'login',
+      name: 'loginSignUp',
       path: '/:user/:password', // Ruta raíz o Home
-      builder: (context, state) => const LoginScreen(),
+      builder: (context, state){
+        String user = state.pathParameters['user']??='';
+        String pass = state.pathParameters['password']??='';
+        return LoginScreen(user: user, password: pass);
+      }
     ),
     GoRoute(
       path: '/signup',

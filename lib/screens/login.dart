@@ -23,7 +23,10 @@ class _LoginScreenState extends State<LoginScreen> {
   late final String password;
 
 
-  _LoginScreenState(this.username, this.password);
+  _LoginScreenState(this.username, this.password){
+   user.text = username;
+   pass.text = password;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,18 +83,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   OverflowBar(
                     alignment: MainAxisAlignment.end,
                     children: [
+                      ElevatedButton(
+                        child: const Text("Log In"),
+                        onPressed: () {
+                          context.push("/provincias");
+                        },
+                      ),
                       TextButton(
                         child: const Text("Sign Up"),
                         onPressed: () {
                           context.push("/signup");
                         },
                       ),
-                      ElevatedButton(
-                        child: const Text("Log In"),
-                        onPressed: () {
-                          context.push("/provincias");
-                        },
-                      )
+
                     ],
                   )
                 ],
