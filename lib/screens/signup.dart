@@ -35,14 +35,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   Text(
                     "Sign Up",
                     style: GoogleFonts.kodeMono(
-                        color: Color.fromRGBO(14, 185, 232, 100),
+                        color: Color.fromRGBO(255, 88, 52, 100),
                         fontSize: 32,
-                        shadows: [
-                          const Shadow(
-                              color: Colors.black,
-                              blurRadius: 3.0,
-                              offset: Offset(3.0, 3.0))
-                        ]),
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20.0),
@@ -72,9 +67,6 @@ class _SignupScreenState extends State<SignupScreen> {
                       ElevatedButton(
                         child: const Text("Sign Up"),
                         onPressed: () {
-                          if(user.text == null || pass.text == null){
-                            return;
-                          }
                           context.push("/${user.text}/${pass.text}");
                         },
                       ),
