@@ -23,8 +23,8 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
   late final int comarcaId;
 
 
-  _ComarcaInfoState(this.provinciaId, this.comarcaId){
-    comarca = provincies["provincies"][this.provinciaId]["comarques"][this.comarcaId];
+  _ComarcaInfoState( this.comarcaId,this.provinciaId){
+    comarca = provincies["provincies"][provinciaId]["comarques"][comarcaId];
   }
 
   late final List<Widget> _pages = [
