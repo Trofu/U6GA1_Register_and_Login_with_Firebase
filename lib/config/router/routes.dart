@@ -11,7 +11,8 @@ final GoRouter router = GoRouter(
       name: 'login',
       path: '/', // Ruta raíz o Home
       builder: (context, state) => const LoginScreen(user: '', password: '',),
-    ),GoRoute(
+    ),
+    GoRoute(
       name: 'loginSignUp',
       path: '/:user/:password', // Ruta raíz o Home
       builder: (context, state){

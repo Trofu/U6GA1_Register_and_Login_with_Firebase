@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:u3ga1/screens/comarca1.dart';
-import 'package:u3ga1/screens/comarca2.dart';
-import 'package:u3ga1/screens/comarcas.dart';
-import 'package:u3ga1/screens/login.dart';
-import 'package:u3ga1/screens/provincias.dart';
+
 
 import 'config/router/routes.dart';
 
