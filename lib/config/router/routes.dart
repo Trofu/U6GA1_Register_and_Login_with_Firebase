@@ -44,9 +44,7 @@ final GoRouter router = GoRouter(
       path: '/provincias/:proId/comarca/:comId',
       builder: (context, state) {
         final String proId = state.pathParameters['proId']!;
-        print("Codigo de la provincia: "+proId);
         final String comId = state.pathParameters['comId']!;
-        print("Codigo de la comarca: "+comId);
         return ComarcaInfo(comarca: int.parse(comId),provincia: int.parse(proId));
       },
     ),

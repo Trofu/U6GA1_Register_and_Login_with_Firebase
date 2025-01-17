@@ -69,6 +69,12 @@ flutter:
     - assets/icons/termometro.png
     - assets/icons/atras.png
     - assets/icons/veleta-de-viento.png
+    - assets/icons/png/soleado.png
+    - assets/icons/png/lluvia_debil.png
+    - assets/icons/png/lluvia.png
+    - assets/icons/png/nieve.png
+    - assets/icons/png/nublado.png
+    - assets/icons/png/poco_nublado.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

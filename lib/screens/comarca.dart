@@ -3,6 +3,7 @@ import 'package:maps_launcher/maps_launcher.dart';
 import 'package:u3ga1/gps_utils.dart';
 
 import '../date/counties.dart';
+import '../widgets/widget_clima.dart';
 
 class ComarcaInfo extends StatefulWidget {
   final int comarca;
@@ -24,7 +25,6 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
 
   _ComarcaInfoState(this.provinciaId, this.comarcaId){
     comarca = provincies["provincies"][this.provinciaId]["comarques"][this.comarcaId];
-    print(comarca);
   }
 
   late final List<Widget> _pages = [
@@ -85,142 +85,36 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
       ),
     ),
     // Informacion Tiempo de la comarca
-    // Scaffold(
-    //   body: SafeArea(
-    //     child: ListView(
-    //       children: [
-    //         Column(
-    //           children: [
-    //             Container(
-    //               height: 300,
-    //               decoration:  const BoxDecoration(
-    //                   image: DecorationImage(
-    //                       image: AssetImage("assets/icons/cloudy.png"),
-    //                       fit: BoxFit.contain
-    //                   )
-    //               ),
-    //             ),
-    //             Column(
-    //               children: [
-    //                 const Row(
-    //                   mainAxisAlignment: MainAxisAlignment.center,
-    //                   children: [
-    //                     Image(
-    //                       width: 20,
-    //                       image: AssetImage("assets/icons/termometro.png"),
-    //                     ),
-    //                     Text("5.4º"),
-    //                   ],
-    //                 ),
-    //                 const Row(
-    //                   mainAxisAlignment: MainAxisAlignment.center,
-    //                   children: [
-    //                     Image(
-    //                       width: 20,
-    //                       image: AssetImage("assets/icons/veleta-de-viento.png"),
-    //                     ),
-    //                     SizedBox(width: 8), // Espacio entre la imagen y el texto
-    //                     Text("9.4km/h"),
-    //                     SizedBox(width: 8), // Espacio entre el texto y el siguiente texto
-    //                     Text("Ponent"),
-    //                     SizedBox(width: 8), // Espacio entre el texto y la imagen
-    //                     Image(
-    //                       width: 20,
-    //                       image: AssetImage("assets/icons/atras.png"),
-    //                     ),
-    //                   ],
-    //                 ),
-    //
-    //                 Row(
-    //                   children: [
-    //                     // Primera columna con texto alineado a la izquierda y padding
-    //                     const Expanded(
-    //                       child: Padding(
-    //                         padding: EdgeInsets.symmetric(horizontal: 8.0), // Espaciado horizontal
-    //                         child: Column(
-    //                           crossAxisAlignment: CrossAxisAlignment.start, // Alinea el contenido de la columna a la izquierda
-    //                           children: [
-    //                             Text("Població:", textAlign: TextAlign.left),
-    //                             Text("Latitud:", textAlign: TextAlign.left),
-    //                             Text("Longitud:", textAlign: TextAlign.left),
-    //                           ],
-    //                         ),
-    //                       ),
-    //                     ),
-    //                     // Segunda columna con los valores de la comarca y padding
-    //                     Expanded(
-    //                       child: Padding(
-    //                         padding: const EdgeInsets.symmetric(horizontal: 8.0), // Espaciado horizontal
-    //                         child: Column(
-    //                           crossAxisAlignment: CrossAxisAlignment.start, // Alinea el contenido de la columna a la izquierda
-    //                           children: [
-    //                             Text(comarca["poblacio"].toString(), textAlign: TextAlign.left),
-    //                             Text(comarca["coordenades"][0].toString(), textAlign: TextAlign.left),
-    //                             Text(comarca["coordenades"][1].toString(), textAlign: TextAlign.left),
-    //                           ],
-    //                         ),
-    //                       ),
-    //                     ),
-    //                   ],
-    //                 ),
-    //               ],
-    //             )
-    //           ],
-    //         ),
-    //       ],
-    //     )
-    //   ),
-    // ),
-    FutureBuilder(
-        future: determinaPosicio(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        String text = "";
-        double latitud = 0.0;
-        double longitud = 0.0;
-
-        // Quan l'estat de la petició al servei indique que ha finalitzat
-        if (snapshot.connectionState == ConnectionState.done) {
-          // Comprovem si té errors
-          if (snapshot.hasError) {
-            debugPrint(snapshot.error.toString());
-            text = "Error: ${snapshot.error.toString()}";
-          } else if (snapshot.hasData) {
-            // O si conté dades. En aquest cas, la longitud i la latitud
-            // i el text per mostrar-les:
-            latitud = snapshot.data.latitude ?? 0.0;
-            longitud = snapshot.data.longitude ?? 0.0;
-            text = "Ubicació actual: ($latitud, $longitud)";
-          }
-
-          // I creem el giny, que mostrarà centrat aquest text
-          // i un botó per obrir Google Maps.
-
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+    Scaffold(
+      body: SafeArea(
+        child: ListView(
+          children: [
+            Column(
               children: [
-                Text(text),
-                ElevatedButton(
-                    onPressed: () {
-                      MapsLauncher.launchCoordinates(latitud, longitud);
-                    },
-                    child: const Text("Obre la ubicació"))
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Column(children: [
+                              WidgetClima(
+                                comarca: comarca,
+                              )
+                            ]),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                )
               ],
             ),
-          );
-        } else {
-          // Mentre no finalitze la petició al servei, mostrem
-          // l'indicador de progrés
-
-          return const Center(
-            child: SizedBox(
-              width: 200,
-              height: 200,
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-      },
+          ],
+        )
+      ),
     ),
   ];
 
