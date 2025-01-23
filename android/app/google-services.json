@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1064791366478",
+    "project_id": "aplicacionesmovilesdam2",
+    "storage_bucket": "aplicacionesmovilesdam2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064791366478:android:c930687707f19439085c1f",
+        "android_client_info": {
+          "package_name": "com.example.practica1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwqC4BWIMJZFQTRmiN86PwzZXryY3DKiY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064791366478:android:f588a3b4987f9e19085c1f",
+        "android_client_info": {
+          "package_name": "com.example.u3ga1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwqC4BWIMJZFQTRmiN86PwzZXryY3DKiY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

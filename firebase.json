@@ -1,0 +1,25 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "aplicacionesmovilesdam2",
+          "appId": "1:1064791366478:android:f588a3b4987f9e19085c1f",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "aplicacionesmovilesdam2",
+          "configurations": {
+            "android": "1:1064791366478:android:f588a3b4987f9e19085c1f",
+            "ios": "1:1064791366478:ios:05553b2c96ee1813085c1f",
+            "macos": "1:1064791366478:ios:05553b2c96ee1813085c1f",
+            "web": "1:1064791366478:web:6b7e1cf37c1d92bc085c1f",
+            "windows": "1:1064791366478:web:d9cf4191ffb2406b085c1f"
+          }
+        }
+      }
+    }
+  }
+}
