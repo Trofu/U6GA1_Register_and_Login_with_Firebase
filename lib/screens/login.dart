@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class LoginScreen extends StatefulWidget{
 
@@ -19,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final user = TextEditingController();
   final pass = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   late final String username;
   late final String password;
 
@@ -26,6 +30,31 @@ class _LoginScreenState extends State<LoginScreen> {
   _LoginScreenState(this.username, this.password){
    user.text = username;
    pass.text = password;
+  }
+
+  Future<void> _login() async {
+    try {
+      // Inicia sesión con Firebase
+      await _auth.signInWithEmailAndPassword(email: user.text.trim(), password: pass.text.trim());
+
+      // Si es exitoso, navega a la pantalla principal
+      context.push('/provincias');
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+
+      if (e.code == 'user-not-found') {
+        errorMessage = 'Usuario no encontrado.';
+      } else if (e.code == 'wrong-password') {
+        errorMessage = 'Contraseña incorrecta.';
+      }else {
+        errorMessage = 'Error: ${e.message}';
+      }
+
+      // Muestra el mensaje de error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    }
   }
 
   @override
@@ -86,7 +115,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ElevatedButton(
                         child: const Text("Log In"),
                         onPressed: () {
-                          context.push("/provincias");
+                          if (user.text.isNotEmpty && pass.text.isNotEmpty) {
+                            _login(); // Llama a la función de login
+                          }
                         },
                       ),
                       TextButton(
@@ -95,7 +126,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           context.push("/signup");
                         },
                       ),
-
                     ],
                   )
                 ],

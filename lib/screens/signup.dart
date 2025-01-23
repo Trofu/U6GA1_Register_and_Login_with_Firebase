@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -14,6 +15,37 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final user = TextEditingController();
   final pass = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void> _signUp() async {
+
+    try {
+      // Registrar al usuario en Firebase Authentication
+      await _auth.createUserWithEmailAndPassword(email: user.text.trim(), password: pass.text.trim());
+
+      // Si es exitoso, navega al login con las credenciales
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registro exitoso, inicia sesión.')),
+      );
+      context.push("/login/${user.text}/${pass.text}");
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      if (e.code == 'email-already-in-use') {
+        errorMessage = 'Este correo ya está en uso.';
+      } else if (e.code == 'weak-password') {
+        errorMessage = 'La contraseña es demasiado débil.';
+      } else if (e.code == 'invalid-email') {
+        errorMessage = 'Correo no válido.';
+      } else {
+        errorMessage = 'Error: ${e.message}';
+      }
+
+      // Mostrar mensaje de error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,14 +99,19 @@ class _SignupScreenState extends State<SignupScreen> {
                       ElevatedButton(
                         child: const Text("Sign Up"),
                         onPressed: () {
-                          context.push("/${user.text}/${pass.text}");
+                          if (user.text.isNotEmpty && pass.text.isNotEmpty) {
+                            _signUp();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Completa todos los campos')),
+                            );
+                          }
                         },
                       ),
                       TextButton(
-                        child: const Text("CANCEL"),
+                        child: const Text("Log In"),
                         onPressed: () {
-                          pass.clear();
-                          user.clear();
+                          context.push("/");
                         },
                       )
                     ],

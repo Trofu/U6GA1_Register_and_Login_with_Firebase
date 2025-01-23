@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:u3ga1/screens/comarca.dart';
 import 'package:u3ga1/screens/comarcas.dart';
@@ -5,19 +6,26 @@ import 'package:u3ga1/screens/login.dart';
 import 'package:u3ga1/screens/provincias.dart';
 import 'package:u3ga1/screens/signup.dart';
 
+const clientId = 'AIzaSyCwqC4BWIMJZFQTRmiN86PwzZXryY3DKiY';
+
+String user = "";
+String pass = "";
 final GoRouter router = GoRouter(
   routes: [
     GoRoute(
       name: 'login',
       path: '/', // Ruta raíz o Home
-      builder: (context, state) => const LoginScreen(user: '', password: '',),
+      builder: (context, state) => LoginScreen(user: user, password: pass,),
+      redirect: (context, state){
+
+      }
     ),
     GoRoute(
       name: 'loginSignUp',
-      path: '/:user/:password', // Ruta raíz o Home
+      path: '/login/:user/:password', // Ruta raíz o Home
       builder: (context, state){
-        String user = state.pathParameters['user']??='';
-        String pass = state.pathParameters['password']??='';
+        user = state.pathParameters['user']??='';
+        pass = state.pathParameters['password']??='';
         return LoginScreen(user: user, password: pass);
       }
     ),
@@ -25,6 +33,19 @@ final GoRouter router = GoRouter(
       path: '/signup',
       name: 'Sign Up',
       builder: (context,state) => const SignupScreen(),
+    ),
+    GoRoute(
+      path: '/:user/:pass',
+      name: 'Auth',
+      redirect: (context, state){
+        final currentUser = FirebaseAuth.instance.currentUser;
+        if (currentUser == null) {
+          user = '';
+          pass = '';
+          return "/";
+        }
+        return "/provincias";
+      }
     ),
     GoRoute(
       name: 'provincias',
@@ -50,3 +71,4 @@ final GoRouter router = GoRouter(
     ),
   ],
 );
+

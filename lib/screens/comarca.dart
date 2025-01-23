@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:maps_launcher/maps_launcher.dart';
-import 'package:u3ga1/gps_utils.dart';
 
 import '../date/counties.dart';
 import '../widgets/widget_clima.dart';
