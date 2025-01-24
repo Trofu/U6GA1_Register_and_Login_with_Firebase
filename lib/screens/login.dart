@@ -8,13 +8,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget{
 
-  final String user;
-  final String password;
 
-  const LoginScreen({Key?key,required this.user,required this.password}): super(key: key);
+  const LoginScreen({Key?key}): super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState(user,password);
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -23,14 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final pass = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  late final String username;
-  late final String password;
-
-
-  _LoginScreenState(this.username, this.password){
-   user.text = username;
-   pass.text = password;
-  }
 
   Future<void> _login() async {
     try {
@@ -38,7 +28,9 @@ class _LoginScreenState extends State<LoginScreen> {
       await _auth.signInWithEmailAndPassword(email: user.text.trim(), password: pass.text.trim());
 
       // Si es exitoso, navega a la pantalla principal
-      context.push('/provincias');
+      user.text="";
+      pass.text="";
+      context.push('/Auth');
     } on FirebaseAuthException catch (e) {
       String errorMessage;
 

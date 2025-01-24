@@ -1,33 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
-import 'package:u3ga1/screens/comarca.dart';
-import 'package:u3ga1/screens/comarcas.dart';
-import 'package:u3ga1/screens/login.dart';
-import 'package:u3ga1/screens/provincias.dart';
-import 'package:u3ga1/screens/signup.dart';
+import 'package:FirebaseU6GA1/screens/comarca.dart';
+import 'package:FirebaseU6GA1/screens/comarcas.dart';
+import 'package:FirebaseU6GA1/screens/login.dart';
+import 'package:FirebaseU6GA1/screens/provincias.dart';
+import 'package:FirebaseU6GA1/screens/signup.dart';
 
 const clientId = 'AIzaSyCwqC4BWIMJZFQTRmiN86PwzZXryY3DKiY';
 
-String user = "";
-String pass = "";
+
 final GoRouter router = GoRouter(
   routes: [
     GoRoute(
       name: 'login',
       path: '/', // Ruta raíz o Home
-      builder: (context, state) => LoginScreen(user: user, password: pass,),
-      redirect: (context, state){
-
-      }
-    ),
-    GoRoute(
-      name: 'loginSignUp',
-      path: '/login/:user/:password', // Ruta raíz o Home
-      builder: (context, state){
-        user = state.pathParameters['user']??='';
-        pass = state.pathParameters['password']??='';
-        return LoginScreen(user: user, password: pass);
-      }
+      builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
       path: '/signup',
@@ -35,13 +22,11 @@ final GoRouter router = GoRouter(
       builder: (context,state) => const SignupScreen(),
     ),
     GoRoute(
-      path: '/:user/:pass',
+      path: '/Auth',
       name: 'Auth',
       redirect: (context, state){
         final currentUser = FirebaseAuth.instance.currentUser;
         if (currentUser == null) {
-          user = '';
-          pass = '';
           return "/";
         }
         return "/provincias";
@@ -69,6 +54,13 @@ final GoRouter router = GoRouter(
         return ComarcaInfo(comarca: int.parse(comId),provincia: int.parse(proId));
       },
     ),
+    GoRoute(
+      name: 'Favoritos',
+      path: '/favorite',
+      builder: (context, state) {
+        return const LoginScreen();
+      }
+    )
   ],
 );
 

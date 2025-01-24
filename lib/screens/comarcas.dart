@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -30,6 +31,17 @@ class _ComarquesScreenState extends State<ComarquesScreen> {
       appBar: AppBar(
         title: Text("Comarcas de " + provincia["provincia"]),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.star),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              context.go('/');
+            },
+            tooltip: 'Favoritos',
+          ),
+        ],
+
       ),
       body: SafeArea(
         child: ListView.builder(

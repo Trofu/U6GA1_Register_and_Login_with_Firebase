@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:maps_launcher/maps_launcher.dart';
-
+import 'package:go_router/go_router.dart';
 import '../date/counties.dart';
 import '../widgets/widget_clima.dart';
 
@@ -8,22 +9,43 @@ class ComarcaInfo extends StatefulWidget {
   final int comarca;
   final int provincia;
 
-  const ComarcaInfo({Key? key, required this.comarca, required this.provincia}) : super(key: key);
+  const ComarcaInfo({Key? key, required this.comarca, required this.provincia})
+      : super(key: key);
 
   @override
-  State<ComarcaInfo> createState() => _ComarcaInfoState(comarca,provincia);
+  State<ComarcaInfo> createState() => _ComarcaInfoState(comarca, provincia);
 }
 
 class _ComarcaInfoState extends State<ComarcaInfo> {
 
   int _currentIndex = 0;
   late final comarca;
-  late final int provinciaId;
-  late final int comarcaId;
 
 
-  _ComarcaInfoState( this.comarcaId,this.provinciaId){
+  _ComarcaInfoState(comarcaId, provinciaId) {
     comarca = provincies["provincies"][provinciaId]["comarques"][comarcaId];
+  }
+
+  Future<void> agregarAFavoritos(String itemId, Map<String, dynamic> datosItem) async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+      final favoritosRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('favoritos');
+      await favoritosRef.doc(itemId).set(datosItem);
+    }
+  }
+
+
+  Widget estrella(){
+
+    return IconButton(
+        onPressed:()=>{
+
+        },
+        icon: Icon(Icons.star_border)
+    );
   }
 
   late final List<Widget> _pages = [
@@ -48,13 +70,23 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
                   // Padding para toda la columna de textos
                   child: Column(
                     children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          comarca["comarca"],
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(fontSize: 22),
-                        ),
+                      Row(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              comarca["comarca"],
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(fontSize: 22),
+                            ),
+                          ),
+                          IconButton(
+                              onPressed:()=>{
+
+                              },
+                              icon: Icon(Icons.star_border)
+                          )
+                        ],
                       ),
                       const SizedBox(height: 8.0), // Espaciado entre textos
                       Align(
@@ -86,33 +118,33 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
     // Informacion Tiempo de la comarca
     Scaffold(
       body: SafeArea(
-        child: ListView(
-          children: [
-            Column(
-              children: [
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(24.0),
-                            child: Column(children: [
-                              WidgetClima(
-                                comarca: comarca,
-                              )
-                            ]),
+          child: ListView(
+            children: [
+              Column(
+                children: [
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(24.0),
+                              child: Column(children: [
+                                WidgetClima(
+                                  comarca: comarca,
+                                )
+                              ]),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ],
-        )
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ],
+          )
       ),
     ),
   ];
@@ -123,6 +155,16 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
       appBar: AppBar(
         title: Text(comarca["comarca"]),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.star),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              context.go('/');
+            },
+            tooltip: 'Favoritos',
+          ),
+        ],
       ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(

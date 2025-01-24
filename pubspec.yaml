@@ -1,4 +1,4 @@
-name: u3ga1
+name: FirebaseU6GA1
 description: "Gradel Activity"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -40,6 +40,7 @@ dependencies:
   firebase_core: ^3.10.1
   firebase_auth: ^5.4.1
   firebase_ui_auth: ^1.16.1
+  cloud_firestore: ^5.6.2
 
 dev_dependencies:
   flutter_test:

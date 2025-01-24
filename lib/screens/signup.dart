@@ -27,7 +27,9 @@ class _SignupScreenState extends State<SignupScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registro exitoso, inicia sesión.')),
       );
-      context.push("/login/${user.text}/${pass.text}");
+      user.text="";
+      pass.text="";
+      context.push("/Auth");
     } on FirebaseAuthException catch (e) {
       String errorMessage;
       if (e.code == 'email-already-in-use') {
