@@ -46,6 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1064791366478',
     projectId: 'aplicacionesmovilesdam2',
     authDomain: 'aplicacionesmovilesdam2.firebaseapp.com',
+    databaseURL: 'https://aplicacionesmovilesdam2-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'aplicacionesmovilesdam2.firebasestorage.app',
     measurementId: 'G-Y8DT3J56G6',
   );
@@ -55,6 +56,7 @@ class DefaultFirebaseOptions {
     appId: '1:1064791366478:android:f588a3b4987f9e19085c1f',
     messagingSenderId: '1064791366478',
     projectId: 'aplicacionesmovilesdam2',
+    databaseURL: 'https://aplicacionesmovilesdam2-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'aplicacionesmovilesdam2.firebasestorage.app',
   );
 
@@ -63,6 +65,7 @@ class DefaultFirebaseOptions {
     appId: '1:1064791366478:ios:05553b2c96ee1813085c1f',
     messagingSenderId: '1064791366478',
     projectId: 'aplicacionesmovilesdam2',
+    databaseURL: 'https://aplicacionesmovilesdam2-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'aplicacionesmovilesdam2.firebasestorage.app',
     iosBundleId: 'com.example.u3ga1',
   );
@@ -72,6 +75,7 @@ class DefaultFirebaseOptions {
     appId: '1:1064791366478:ios:05553b2c96ee1813085c1f',
     messagingSenderId: '1064791366478',
     projectId: 'aplicacionesmovilesdam2',
+    databaseURL: 'https://aplicacionesmovilesdam2-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'aplicacionesmovilesdam2.firebasestorage.app',
     iosBundleId: 'com.example.u3ga1',
   );
@@ -82,7 +86,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1064791366478',
     projectId: 'aplicacionesmovilesdam2',
     authDomain: 'aplicacionesmovilesdam2.firebaseapp.com',
+    databaseURL: 'https://aplicacionesmovilesdam2-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'aplicacionesmovilesdam2.firebasestorage.app',
     measurementId: 'G-YWWCWYY99H',
   );
+
 }

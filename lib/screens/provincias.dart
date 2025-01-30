@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -13,6 +12,8 @@ class ProvinciasScreen extends StatefulWidget {
 }
 
 class _ProvinciasScreenState extends State<ProvinciasScreen> {
+
+
   // Método para construir cada provincia como un widget
   Widget buildProvincias(Map<String, dynamic> provincia, int indice) {
     var size = MediaQuery.of(context).size;
@@ -60,24 +61,10 @@ class _ProvinciasScreenState extends State<ProvinciasScreen> {
         )); // Espaciado entre elementos
   }
 
-  Stream<List<Map<String, dynamic>>> obtenerFavoritos() {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId != null) {
-      return FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('favoritos')
-          .snapshots()
-          .map((snapshot) => snapshot.docs
-          .map((doc) => {'id': doc.id, ...doc.data()})
-          .toList());
-    }
-    return Stream.value([]);
-  }
-
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Provincias"),
@@ -106,7 +93,7 @@ class _ProvinciasScreenState extends State<ProvinciasScreen> {
 
             if (confirmLogout == true) {
               await FirebaseAuth.instance.signOut();
-              context.go('/Auth');
+              context.push('/Auth');
             }
           },
           tooltip: 'Cerrar sesión',
@@ -114,8 +101,8 @@ class _ProvinciasScreenState extends State<ProvinciasScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.star),
-            onPressed: () async {
-              print(obtenerFavoritos());
+            onPressed: () {
+              context.push("/favorite");
             },
             tooltip: 'Favoritos',
           ),

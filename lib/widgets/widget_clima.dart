@@ -25,11 +25,6 @@ class _WidgetClimaState extends State<WidgetClima> {
   @override
   void initState() {
     super.initState();
-    // Accedim a les propietats del giny
-    // mitjançant widget.longitud i widget.latitud
-    // Invoquem el mètode obteClima
-    print(comarca["coordenades"][0]);
-    print(comarca["coordenades"][1]);
     info = obteClima(
         longitud: widget.comarca["coordenades"][0] ?? 0.0,
         latitud: widget.comarca["coordenades"][1] ?? 0.0

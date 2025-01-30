@@ -34,9 +34,8 @@ class _ComarquesScreenState extends State<ComarquesScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.star),
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              context.go('/');
+            onPressed: () {
+              context.push("/favorite");
             },
             tooltip: 'Favoritos',
           ),

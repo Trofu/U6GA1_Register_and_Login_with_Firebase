@@ -1,4 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -13,43 +14,59 @@ class ComarcaInfo extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<ComarcaInfo> createState() => _ComarcaInfoState(comarca, provincia);
+  State<ComarcaInfo> createState() => _ComarcaInfoState();
 }
 
 class _ComarcaInfoState extends State<ComarcaInfo> {
-
   int _currentIndex = 0;
   late final comarca;
+  late final int pro;
+  late final int com;
+  bool esFavorito = false;
+  late final String id;
+  late DatabaseReference ref;
 
+  @override
+  void initState() {
+    super.initState();
+    comarca = provincies["provincies"][widget.provincia]["comarques"][widget.comarca];
+    pro = widget.provincia;
+    com = widget.comarca;
+    id = FirebaseAuth.instance.currentUser?.uid ?? "";
+    ref = FirebaseDatabase.instance.ref("usuarios/$id/favoritos/${pro}-${com}");
+    _verificarFavorito();
 
-  _ComarcaInfoState(comarcaId, provinciaId) {
-    comarca = provincies["provincies"][provinciaId]["comarques"][comarcaId];
   }
 
-  Future<void> agregarAFavoritos(String itemId, Map<String, dynamic> datosItem) async {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId != null) {
-      final favoritosRef = FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('favoritos');
-      await favoritosRef.doc(itemId).set(datosItem);
+  Future<void> _verificarFavorito() async {
+    final existe = await ref.child("favorito").get();
+    setState(() {
+      esFavorito = existe.exists && (existe.value == true);
+    });
+  }
+
+  Future<void> anyadirFavoritos() async {
+    final existe = await ref.child("favorito").get();
+    if (existe.exists) {
+      if(esFavorito){
+        await ref.update({
+          "favorito": false
+        });
+      }else{
+        await ref.update({
+          "favorito": true
+        });
+      }
+    } else {
+      await ref.set({
+        "favorito": true,
+        "pro": pro,
+        "com": com,
+      });
     }
   }
 
-
-  Widget estrella(){
-
-    return IconButton(
-        onPressed:()=>{
-
-        },
-        icon: Icon(Icons.star_border)
-    );
-  }
-
   late final List<Widget> _pages = [
-    // Informacion Comarca
     Scaffold(
       body: SafeArea(
         child: ListView(
@@ -67,33 +84,31 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  // Padding para toda la columna de textos
                   child: Column(
                     children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              comarca["comarca"],
-                              textAlign: TextAlign.left,
-                              style: const TextStyle(fontSize: 22),
-                            ),
+                          Text(
+                            comarca["comarca"],
+                            style: const TextStyle(fontSize: 22),
                           ),
                           IconButton(
-                              onPressed:()=>{
-
-                              },
-                              icon: Icon(Icons.star_border)
-                          )
+                            icon: Icon(esFavorito ? Icons.star : Icons.star_border),
+                            onPressed: () async{
+                              await anyadirFavoritos();
+                              setState(() {
+                                esFavorito = !esFavorito;
+                              });
+                            },
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 8.0), // Espaciado entre textos
+                      const SizedBox(height: 8.0),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Capital: " + comarca["capital"],
-                          textAlign: TextAlign.left,
+                          "Capital: ${comarca["capital"]}",
                           style: const TextStyle(fontSize: 18),
                         ),
                       ),
@@ -102,7 +117,6 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           comarca["desc"],
-                          textAlign: TextAlign.left,
                           style: const TextStyle(fontSize: 16),
                         ),
                       ),
@@ -115,36 +129,19 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
         ),
       ),
     ),
-    // Informacion Tiempo de la comarca
+    // Información del clima
     Scaffold(
       body: SafeArea(
-          child: ListView(
-            children: [
-              Column(
-                children: [
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(24.0),
-                              child: Column(children: [
-                                WidgetClima(
-                                  comarca: comarca,
-                                )
-                              ]),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  )
-                ],
+        child: ListView(
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: WidgetClima(comarca: comarca),
               ),
-            ],
-          )
+            ),
+          ],
+        ),
       ),
     ),
   ];
@@ -158,9 +155,8 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
         actions: [
           IconButton(
             icon: const Icon(Icons.star),
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              context.go('/');
+            onPressed: () {
+              context.push("/favorite");
             },
             tooltip: 'Favoritos',
           ),

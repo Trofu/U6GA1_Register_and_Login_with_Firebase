@@ -1,3 +1,4 @@
+import 'package:FirebaseU6GA1/screens/favoritos.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:FirebaseU6GA1/screens/comarca.dart';
@@ -58,7 +59,7 @@ final GoRouter router = GoRouter(
       name: 'Favoritos',
       path: '/favorite',
       builder: (context, state) {
-        return const LoginScreen();
+        return const FavoritosScreen();
       }
     )
   ],
