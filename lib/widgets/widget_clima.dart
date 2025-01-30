@@ -47,7 +47,6 @@ class _WidgetClimaState extends State<WidgetClima> {
               snapshot.data["current_weather"]["winddirection"].toString();
           String codi =
               snapshot.data["current_weather"]["weathercode"].toString();
-          print(temperatura);
           return Column(
             children: [
               _obtenirIconaOratge(codi),

@@ -12,15 +12,13 @@ class ProvinciasScreen extends StatefulWidget {
 }
 
 class _ProvinciasScreenState extends State<ProvinciasScreen> {
-
-
   // Método para construir cada provincia como un widget
   Widget buildProvincias(Map<String, dynamic> provincia, int indice) {
     var size = MediaQuery.of(context).size;
-    var height = size.height/5;
+    var height = size.height / 5;
     var pad = 0.0;
-    if (indice!=provincies["provincies"].length) {
-      pad = height/2;
+    if (indice != provincies["provincies"].length) {
+      pad = height / 2;
     }
     return Padding(
         padding: EdgeInsets.only(bottom: pad),
@@ -61,10 +59,8 @@ class _ProvinciasScreenState extends State<ProvinciasScreen> {
         )); // Espaciado entre elementos
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Provincias"),

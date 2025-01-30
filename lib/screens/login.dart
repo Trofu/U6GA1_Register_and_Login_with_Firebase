@@ -99,6 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       labelText: 'Password',
                       border: OutlineInputBorder(),
                     ),
+                    obscureText: true,
                   ),
                   const SizedBox(height: 12.0),
                   OverflowBar(
