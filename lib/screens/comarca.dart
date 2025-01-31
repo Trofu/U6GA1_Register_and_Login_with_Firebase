@@ -1,3 +1,5 @@
+import 'package:FirebaseU6GA1/config/router/routes.dart';
+import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -160,6 +162,13 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
       appBar: AppBar(
         title: Text(comarca["comarca"]),
         centerTitle: true,
+        leading: IconButton(
+            onPressed: (){
+              context.pop();
+            },
+            icon:Icon(Icons.arrow_back),
+          tooltip: "Volver atras",
+        ) ,
       ),
       body: _currentIndex == 0 ? _buildInfoPage() : _buildClimaPage(),
       bottomNavigationBar: BottomNavigationBar(

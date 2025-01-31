@@ -20,8 +20,16 @@ class _FavoritosScreenState extends State<FavoritosScreen> {
   _FavoritosScreenState() {
     var id = FirebaseAuth.instance.currentUser?.uid ?? "";
     ref = FirebaseDatabase.instance.ref("usuarios/$id/favoritos");
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
     getFavoritos(); // Llama a la función para buscar los favoritos
   }
+
+
 
   /// Función que obtiene los favoritos desde Firebase
   void getFavoritos() async {

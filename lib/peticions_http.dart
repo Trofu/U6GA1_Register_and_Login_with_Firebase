@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:convert'; // Per realitzar conversions entre tipus de dades
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http; // Per realitzar peticions HTTP
 
 Future<dynamic> obteClima(

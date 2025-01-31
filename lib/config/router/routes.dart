@@ -7,8 +7,6 @@ import 'package:FirebaseU6GA1/screens/login.dart';
 import 'package:FirebaseU6GA1/screens/provincias.dart';
 import 'package:FirebaseU6GA1/screens/signup.dart';
 
-const clientId = 'AIzaSyCwqC4BWIMJZFQTRmiN86PwzZXryY3DKiY';
-
 
 final GoRouter router = GoRouter(
   routes: [
