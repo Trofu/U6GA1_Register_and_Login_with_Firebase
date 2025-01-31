@@ -48,14 +48,14 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
   }
 
   Future<void> anyadirFavoritos() async {
+    String errorMessage = "Añadiend ${comarca["comarca"]} a favoritos";
     final existe = await ref.child("favorito").get();
     if (existe.exists) {
       if (esFavorito) {
         await ref.update({"favorito": false});
-        print("remove favorito");
+        errorMessage = "Quitando ${comarca["comarca"]} de favoritos";
       } else {
         await ref.update({"favorito": true});
-        print("add favorito");
       }
     } else {
       await ref.set({
@@ -66,8 +66,10 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
     }
     setState((){
       esFavorito = !esFavorito;
-      print("cambiando el favorito");
     });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(errorMessage)),
+    );
   }
 
 
