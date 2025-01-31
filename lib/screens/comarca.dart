@@ -24,6 +24,13 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
   late final String id;
   late DatabaseReference ref;
 
+
+  @override
+  void initState() {
+    super.initState();
+    _verificarFavorito();
+  }
+
   _ComarcaInfoState(this.pro, this.com){
     comarca = provincies["provincies"][pro]["comarques"][com];
     id = FirebaseAuth.instance.currentUser?.uid ?? "";
@@ -33,7 +40,9 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
 
   Future<void> _verificarFavorito() async {
     final existe = await ref.child("favorito").get();
-    esFavorito = existe.exists && (existe.value == true);
+    setState(() {
+      esFavorito = existe.exists && (existe.value == true);
+    });
   }
 
   Future<void> anyadirFavoritos() async {
@@ -147,7 +156,6 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
 
   @override
   Widget build(BuildContext context){
-    _verificarFavorito();
     return Scaffold(
       appBar: AppBar(
         title: Text(comarca["comarca"]),
