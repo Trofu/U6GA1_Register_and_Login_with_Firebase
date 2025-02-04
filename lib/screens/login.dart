@@ -42,7 +42,8 @@ class _LoginScreenState extends State<LoginScreen> {
       } else if (e.code == 'wrong-password') {
         errorMessage = 'Contraseña incorrecta.';
       // Caso inesperado
-      }else {
+      }
+      else {
         errorMessage = 'Error: ${e.message}';
       }
 

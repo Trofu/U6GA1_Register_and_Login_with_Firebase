@@ -48,7 +48,7 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
   }
 
   Future<void> anyadirFavoritos() async {
-    String errorMessage = "Añadiend ${comarca["comarca"]} a favoritos";
+    String errorMessage = "Añadiendp ${comarca["comarca"]} a favoritos";
     final existe = await ref.child("favorito").get();
     if (existe.exists) {
       if (esFavorito) {
