@@ -24,7 +24,9 @@ final GoRouter router = GoRouter(
       path: '/Auth',
       name: 'Auth',
       redirect: (context, state){
+        // Verifica si esta el usuario conectado
         final currentUser = FirebaseAuth.instance.currentUser;
+        // Si por algun motivo es nulo que lo devuelva al login
         if (currentUser == null) {
           return "/";
         }

@@ -27,26 +27,37 @@ class _SignupScreenState extends State<SignupScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registro exitoso, inicia sesión.')),
       );
+      // Vacia el texto
       user.text="";
       pass.text="";
+      // Dirige a Autentificar
       context.push("/Auth");
+      // En caso de fallo
     } on FirebaseAuthException catch (e) {
       String errorMessage;
+      // si es porque esta el correo usado
       if (e.code == 'email-already-in-use') {
         errorMessage = 'Este correo ya está en uso.';
+      // si la contraseña es debil
       } else if (e.code == 'weak-password') {
         errorMessage = 'La contraseña es demasiado débil.';
+      // si es correo invalido
       } else if (e.code == 'invalid-email') {
         errorMessage = 'Correo no válido.';
+      // caso inesperado
       } else {
         errorMessage = 'Error: ${e.message}';
       }
 
       // Mostrar mensaje de error
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
-      );
+      mensajeBarraAbajo(errorMessage);
     }
+  }
+
+  void mensajeBarraAbajo(String mensaje){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(mensaje)),
+    );
   }
 
   @override
@@ -105,9 +116,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           if (user.text.isNotEmpty && pass.text.isNotEmpty) {
                             _signUp();
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Completa todos los campos')),
-                            );
+                            mensajeBarraAbajo('Completa todos los campos');
                           }
                         },
                       ),

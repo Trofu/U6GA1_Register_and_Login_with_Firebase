@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../peticions_http.dart';
+import '../config/peticions_http.dart';
 
 class WidgetClima extends StatefulWidget {
    final comarca;

@@ -75,9 +75,6 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
 
   /// Página de información de la comarca
   Widget _buildInfoPage(){
-    () async {
-      await _verificarFavorito();
-    };
     return Scaffold(
       body: SafeArea(
         child: ListView(

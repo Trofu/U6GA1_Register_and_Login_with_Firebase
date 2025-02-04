@@ -27,27 +27,36 @@ class _LoginScreenState extends State<LoginScreen> {
       // Inicia sesión con Firebase
       await _auth.signInWithEmailAndPassword(email: user.text.trim(), password: pass.text.trim());
 
-      // Si es exitoso, navega a la pantalla principal
+      // Vacia el texto
       user.text="";
       pass.text="";
+      // Viaja a autenticar
       context.push('/Auth');
+      // Si no existe entra en el catch
     } on FirebaseAuthException catch (e) {
       String errorMessage;
-
+      // Si no existe mensaje de error
       if (e.code == 'user-not-found') {
         errorMessage = 'Usuario no encontrado.';
+      // Si la contraseña no es correcta
       } else if (e.code == 'wrong-password') {
         errorMessage = 'Contraseña incorrecta.';
+      // Caso inesperado
       }else {
         errorMessage = 'Error: ${e.message}';
       }
 
       // Muestra el mensaje de error
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
-      );
+      mensajeBarraAbajo(errorMessage);
     }
   }
+
+  void mensajeBarraAbajo(String mensaje){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(mensaje)),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -108,8 +117,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       ElevatedButton(
                         child: const Text("Log In"),
                         onPressed: () {
+                          // Si los textos no son vacios realiza la accion
                           if (user.text.isNotEmpty && pass.text.isNotEmpty) {
                             _login(); // Llama a la función de login
+                          }else {
+                            mensajeBarraAbajo('Completa todos los campos');
                           }
                         },
                       ),

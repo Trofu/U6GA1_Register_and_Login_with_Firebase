@@ -26,7 +26,7 @@ class _FavoritosScreenState extends State<FavoritosScreen> {
   @override
   void initState() {
     super.initState();
-    getFavoritos(); // Llama a la función para buscar los favoritos
+    getFavoritos();
   }
 
 
@@ -42,11 +42,11 @@ class _FavoritosScreenState extends State<FavoritosScreen> {
               Map<String, dynamic>.from(entry.value);
           return favorito;
         }).toList();
-        isLoading = false; // Cambia a false cuando los datos hayan sido cargados
+        isLoading = false;
       });
     } else {
       setState(() {
-        isLoading = false; // Cambia a false si no hay datos en Firebase
+        isLoading = false;
       });
     }
   }
