@@ -126,7 +126,7 @@ class _ProvinciasScreenState extends State<ProvinciasScreen> {
             ),
           );
         }
-        return const CircularProgressIndicator();
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }

@@ -192,7 +192,7 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
               ),
             );
           }
-          return CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         });
   }
 }

@@ -48,7 +48,7 @@ class _ComarquesScreenState extends State<ComarquesScreen> {
               ),
             );
           }
-          return CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         });
   }
 
