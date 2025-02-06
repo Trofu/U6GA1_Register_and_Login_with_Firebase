@@ -1,4 +1,4 @@
-package com.example.u3ga1
+package com.example.FirebaseU6GA1
 
 import io.flutter.embedding.android.FlutterActivity
 

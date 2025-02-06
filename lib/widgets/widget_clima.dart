@@ -26,8 +26,8 @@ class _WidgetClimaState extends State<WidgetClima> {
   void initState() {
     super.initState();
     info = obteClima(
-        longitud: widget.comarca["coordenades"][0] ?? 0.0,
-        latitud: widget.comarca["coordenades"][1] ?? 0.0
+        longitud: comarca["longitud"] ?? 0.0,
+        latitud: comarca["latitud"] ?? 0.0
     );
   }
 
@@ -85,7 +85,19 @@ class _WidgetClimaState extends State<WidgetClima> {
                   ),
                   const SizedBox(width: 30),
                   Text(
-                      comarca["poblacio"].toString()
+                      comarca["poblacio"]
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                      "Longitud: "
+                  ),
+                  const SizedBox(width: 30),
+                  Text(
+                      comarca["longitud"].toString()
                   ),
                 ],
               ),
@@ -97,19 +109,7 @@ class _WidgetClimaState extends State<WidgetClima> {
                   ),
                   const SizedBox(width: 30),
                   Text(
-                      comarca["coordenades"][0].toString()
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                      "Altitud: "
-                  ),
-                  const SizedBox(width: 30),
-                  Text(
-                      comarca["coordenades"][1].toString()
+                      comarca["latitud"].toString()
                   ),
                 ],
               ),

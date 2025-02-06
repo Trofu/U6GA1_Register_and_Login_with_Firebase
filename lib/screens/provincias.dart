@@ -1,8 +1,7 @@
+import 'package:FirebaseU6GA1/config/peticions_http.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../date/counties.dart';
 
 class ProvinciasScreen extends StatefulWidget {
   const ProvinciasScreen({Key? key}) : super(key: key);
@@ -12,14 +11,20 @@ class ProvinciasScreen extends StatefulWidget {
 }
 
 class _ProvinciasScreenState extends State<ProvinciasScreen> {
+  late Future<dynamic> provincias;
+
   // Método para construir cada provincia como un widget
-  Widget buildProvincias(Map<String, dynamic> provincia, int indice) {
+  Widget buildProvincias(
+      {required Map<String, dynamic> provincia,
+      required int indice,
+      required int cantidadTotal}) {
     var size = MediaQuery.of(context).size;
     var height = size.height / 5;
     var pad = 0.0;
-    if (indice != provincies["provincies"].length) {
+    if (indice != cantidadTotal) {
       pad = height / 2;
     }
+    var nombre = provincia["provincia"].toString();
     return Padding(
         padding: EdgeInsets.only(bottom: pad),
         child: ClipOval(
@@ -34,11 +39,11 @@ class _ProvinciasScreenState extends State<ProvinciasScreen> {
             child: Center(
                 child: TextButton(
               onPressed: () {
-                String ruta = "/provincias/$indice/comarcas";
+                String ruta = "/$nombre/comarcas";
                 context.push(ruta);
               },
               child: Text(
-                provincia["provincia"],
+                nombre,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 32,
@@ -58,63 +63,77 @@ class _ProvinciasScreenState extends State<ProvinciasScreen> {
           ),
         )); // Espaciado entre elementos
   }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Provincias"),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.logout),
-          onPressed: () async {
-            final confirmLogout = await showDialog<bool>(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text("Cerrar sesión"),
-                content:
-                    const Text("¿Estás seguro de que deseas cerrar sesión?"),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, false),
-                    child: const Text("Cancelar"),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, true),
-                    child: const Text("Cerrar sesión"),
-                  ),
-                ],
-              ),
-            );
+    return FutureBuilder(
+      future: provincias,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text("Provincias"),
+              centerTitle: true,
+              leading: IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () async {
+                  final confirmLogout = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text("Cerrar sesión"),
+                      content: const Text(
+                          "¿Estás seguro de que deseas cerrar sesión?"),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text("Cancelar"),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text("Cerrar sesión"),
+                        ),
+                      ],
+                    ),
+                  );
 
-            if (confirmLogout == true) {
-              await FirebaseAuth.instance.signOut();
-              context.push('/Auth');
-            }
-          },
-          tooltip: 'Cerrar sesión',
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.star),
-            onPressed: () {
-              context.push("/favorite");
-            },
-            tooltip: 'Favoritos',
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          itemCount: provincies["provincies"].length,
-          // Iteramos sobre las provincias
-          itemBuilder: (context, index) {
-            final provincia = provincies["provincies"][index];
-            return buildProvincias(provincia, index);
-          },
-        ),
-      ),
+                  if (confirmLogout == true) {
+                    await FirebaseAuth.instance.signOut();
+                    context.push('/Auth');
+                  }
+                },
+                tooltip: 'Cerrar sesión',
+              ),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.star),
+                  onPressed: () {
+                    context.push("/favorite");
+                  },
+                  tooltip: 'Favoritos',
+                ),
+              ],
+            ),
+            body: SafeArea(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                itemCount: snapshot.data.length,
+                // Iteramos sobre las provincias
+                itemBuilder: (context, index) {
+                  final provincia = snapshot.data[index];
+                  var cantFinal = snapshot.data.length;
+                  return buildProvincias(provincia: provincia, indice: index, cantidadTotal: cantFinal);
+                },
+              ),
+            ),
+          );
+        }
+        return const CircularProgressIndicator();
+      },
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    provincias = obtenirProvincies();
   }
 }

@@ -1,9 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:FirebaseU6GA1/config/peticions_http.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../date/counties.dart';
 
 class FavoritosScreen extends StatefulWidget {
   const FavoritosScreen({super.key});
@@ -13,78 +10,56 @@ class FavoritosScreen extends StatefulWidget {
 }
 
 class _FavoritosScreenState extends State<FavoritosScreen> {
-  late DatabaseReference ref;
-  List<Map<String, dynamic>> favoritos = [];
-  bool isLoading = true;
 
-  _FavoritosScreenState() {
-    var id = FirebaseAuth.instance.currentUser?.uid ?? "";
-    ref = FirebaseDatabase.instance.ref("usuarios/$id/favoritos");
-  }
+  var favoritos;
 
+  _FavoritosScreenState();
 
   @override
   void initState() {
     super.initState();
-    getFavoritos();
-  }
-
-
-
-  /// Función que obtiene los favoritos desde Firebase
-  void getFavoritos() async {
-    final snapshot = await ref.get();
-    if (snapshot.exists) {
-      Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
-      setState(() {
-        favoritos = data.entries.map((entry) {
-          Map<String, dynamic> favorito =
-              Map<String, dynamic>.from(entry.value);
-          return favorito;
-        }).toList();
-        isLoading = false;
-      });
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-    }
+    favoritos = obtenirFavoritos();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, dynamic>> sifavoritos = [];
-    favoritos.forEach(
-      (element) =>
-          element["favorito"] == true ? sifavoritos.add(element) : null,
-    );
     return Scaffold(
       appBar: AppBar(
         title: const Text("Favoritos"),
         centerTitle: true,
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : sifavoritos.isEmpty
-              ? const Center(child: Text("No tienes favoritos"))
-              : ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  itemCount: sifavoritos.length,
-                  itemBuilder: (context, index) {
-                    var pro = sifavoritos[index]["pro"];
-                    var com = sifavoritos[index]["com"];
-                    return buildComarcaCard(index, pro, com);
-                  },
-                ),
+      body: FutureBuilder(
+        future: favoritos,
+        builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          }
+
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text("No tienes favoritos"));
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              return buildComarcaCard(comarca: snapshot.data![index]);
+            },
+          );
+        },
+      ),
     );
   }
 
   /// Widget que construye la tarjeta de cada favorito
-  Widget buildComarcaCard(int indice, int pro, int com) {
-    var comarca = provincies["provincies"][pro]["comarques"][com];
+  Widget buildComarcaCard({required var comarca}) {
     return TextButton(
       onPressed: () {
-        String ruta = "/provincias/$pro/comarca/$com";
+        String ruta = "/${comarca["comarca"].toString()}/info";
         context.push(ruta);
       },
       child: Container(

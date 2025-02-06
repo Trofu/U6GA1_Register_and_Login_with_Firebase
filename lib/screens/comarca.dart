@@ -1,44 +1,39 @@
-import 'package:FirebaseU6GA1/config/router/routes.dart';
-import 'package:go_router/go_router.dart';
+import 'package:FirebaseU6GA1/config/peticions_http.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import '../date/counties.dart';
 import '../widgets/widget_clima.dart';
 
 class ComarcaInfo extends StatefulWidget {
-  final int comarca;
-  final int provincia;
+  final String comarca;
 
-  const ComarcaInfo({Key? key, required this.comarca, required this.provincia})
-      : super(key: key);
+  const ComarcaInfo({Key? key, required this.comarca}) : super(key: key);
 
   @override
-  State<ComarcaInfo> createState() =>
-      _ComarcaInfoState(provincia, comarca);
+  State<ComarcaInfo> createState() => _ComarcaInfoState(comarca);
 }
 
 class _ComarcaInfoState extends State<ComarcaInfo> {
-  int _currentIndex = 0,pro,com;
-  var comarca;
+  int _currentIndex = 0;
+  late Future<dynamic> infoComarca;
+  String comarca;
   bool esFavorito = false;
   late final String id;
   late DatabaseReference ref;
-
 
   @override
   void initState() {
     super.initState();
     _verificarFavorito();
+    infoComarca = obtenirInfoComarca(comarca: comarca);
   }
 
-  _ComarcaInfoState(this.pro, this.com){
-    comarca = provincies["provincies"][pro]["comarques"][com];
+  _ComarcaInfoState(this.comarca) {
     id = FirebaseAuth.instance.currentUser?.uid ?? "";
-    ref = FirebaseDatabase.instance.ref("usuarios/$id/favoritos/${pro}-${com}");
+    ref = FirebaseDatabase.instance.ref("usuarios/$id/favoritos/${comarca}");
   }
-
 
   Future<void> _verificarFavorito() async {
     final existe = await ref.child("favorito").get();
@@ -48,23 +43,22 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
   }
 
   Future<void> anyadirFavoritos() async {
-    String errorMessage = "Añadiendp ${comarca["comarca"]} a favoritos";
+    String errorMessage = "Añadiendo ${comarca} a favoritos";
     final existe = await ref.child("favorito").get();
     if (existe.exists) {
       if (esFavorito) {
         await ref.update({"favorito": false});
-        errorMessage = "Quitando ${comarca["comarca"]} de favoritos";
+        errorMessage = "Quitando ${comarca} de favoritos";
       } else {
         await ref.update({"favorito": true});
       }
     } else {
       await ref.set({
         "favorito": true,
-        "pro": pro,
-        "com": com,
+        "comarca": comarca,
       });
     }
-    setState((){
+    setState(() {
       esFavorito = !esFavorito;
     });
     ScaffoldMessenger.of(context).showSnackBar(
@@ -72,9 +66,8 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
     );
   }
 
-
   /// Página de información de la comarca
-  Widget _buildInfoPage(){
+  Widget _buildInfoPage(var info) {
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -85,7 +78,7 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
                   height: 300,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(comarca["img"]),
+                      image: NetworkImage(info["img"]),
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -98,15 +91,18 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            comarca["comarca"],
+                            info["comarca"],
                             style: const TextStyle(fontSize: 22),
                           ),
                           IconButton(
-                            icon: Icon(esFavorito ? Icons.star : Icons.star_border),
+                            icon: Icon(
+                                esFavorito ? Icons.star : Icons.star_border),
                             onPressed: () async {
                               await anyadirFavoritos();
                             },
-                            tooltip: (esFavorito ? "Quitar de favoritos" : "Añadir a favoritos"),
+                            tooltip: (esFavorito
+                                ? "Quitar de favoritos"
+                                : "Añadir a favoritos"),
                           ),
                         ],
                       ),
@@ -114,7 +110,7 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Capital: ${comarca["capital"]}",
+                          "Capital: ${info["capital"]}",
                           style: const TextStyle(fontSize: 18),
                         ),
                       ),
@@ -122,7 +118,7 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          comarca["desc"],
+                          info["desc"],
                           style: const TextStyle(fontSize: 16),
                         ),
                       ),
@@ -138,7 +134,7 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
   }
 
   /// Página de información del clima
-  Widget _buildClimaPage() {
+  Widget _buildClimaPage(var info) {
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -146,7 +142,7 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
-                child: WidgetClima(comarca: comarca),
+                child: WidgetClima(comarca: info),
               ),
             ),
           ],
@@ -156,40 +152,47 @@ class _ComarcaInfoState extends State<ComarcaInfo> {
   }
 
   @override
-  Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(comarca["comarca"]),
-        centerTitle: true,
-        leading: IconButton(
-            onPressed: (){
-              context.pop();
-            },
-            icon:Icon(Icons.arrow_back),
-          tooltip: "Volver atras",
-        ) ,
-      ),
-      body: _currentIndex == 0 ? _buildInfoPage() : _buildClimaPage(),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (int index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.info),
-            label: 'Info',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.cloud),
-            label: 'Tiempo',
-          ),
-        ],
-      ),
-    );
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: infoComarca,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(comarca),
+                centerTitle: true,
+                leading: IconButton(
+                  onPressed: () {
+                    context.pop();
+                  },
+                  icon: Icon(Icons.arrow_back),
+                  tooltip: "Volver atras",
+                ),
+              ),
+              body: _currentIndex == 0
+                  ? _buildInfoPage(snapshot.data)
+                  : _buildClimaPage(snapshot.data),
+              bottomNavigationBar: BottomNavigationBar(
+                currentIndex: _currentIndex,
+                onTap: (int index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.info),
+                    label: 'Info',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.cloud),
+                    label: 'Tiempo',
+                  ),
+                ],
+              ),
+            );
+          }
+          return CircularProgressIndicator();
+        });
   }
-
-
 }

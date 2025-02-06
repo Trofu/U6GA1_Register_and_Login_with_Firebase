@@ -7,7 +7,7 @@ import 'package:FirebaseU6GA1/screens/login.dart';
 import 'package:FirebaseU6GA1/screens/provincias.dart';
 import 'package:FirebaseU6GA1/screens/signup.dart';
 
-
+var provincia="";
 final GoRouter router = GoRouter(
   routes: [
     GoRoute(
@@ -40,19 +40,19 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       name: 'comarcas',
-      path: '/provincias/:proId/comarcas',
+      path: '/:proId/comarcas',
       builder: (context, state) {
         final String proId = state.pathParameters['proId']!;
-        return ComarquesScreen(provincia: int.parse(proId),);
+        provincia = proId;
+        return ComarquesScreen(provincia: proId);
       },
     ),
     GoRoute(
       name: 'informacion',
-      path: '/provincias/:proId/comarca/:comId',
+      path: '/:comId/info',
       builder: (context, state) {
-        final String proId = state.pathParameters['proId']!;
         final String comId = state.pathParameters['comId']!;
-        return ComarcaInfo(comarca: int.parse(comId),provincia: int.parse(proId));
+        return ComarcaInfo(comarca: comId);
       },
     ),
     GoRoute(
