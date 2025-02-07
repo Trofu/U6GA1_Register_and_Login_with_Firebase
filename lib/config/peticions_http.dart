@@ -74,43 +74,52 @@ Future<dynamic> obtenirInfoComarca({required String comarca}) async{
 }
 
 Future<List<dynamic>> obtenirFavoritos() async {
-  var id = FirebaseAuth.instance.currentUser?.uid ?? "";
+  String id = FirebaseAuth.instance.currentUser?.uid ?? "";
+  if (id.isEmpty) return [];
+
   DatabaseReference ref = FirebaseDatabase.instance.ref("usuarios/$id/favoritos");
-
   final snapshot = await ref.get();
-  if (!snapshot.exists) {
+
+  if (!snapshot.exists || snapshot.value == null) {
     return [];
   }
 
-  List<Map<String, dynamic>> favoritos = [];
+  // Convertir snapshot a Map si es posible
+  if (snapshot.value is! Map<dynamic, dynamic>) {
+    return [];
+  }
+
   Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
-  data.forEach((key, value) {
-    favoritos.add(Map<String, dynamic>.from(value));
-  });
+  List<Map<String, dynamic>> favoritos = [];
 
-  List<Map<String, dynamic>> sifavoritos = favoritos.where((element) => element["favorito"] == true).toList();
-
-  if (sifavoritos.isEmpty) {
-    return [];
+  // Filtrar y convertir datos
+  for (var value in data.values) {
+    if (value is Map<dynamic, dynamic>) {
+      Map<String, dynamic> item = Map<String, dynamic>.from(value);
+      if (item["favorito"] == true) {
+        favoritos.add(item);
+      }
+    }
   }
+
+  if (favoritos.isEmpty) return [];
 
   List<dynamic> listaFavoritos = [];
 
-  for (var element in sifavoritos) {
+  for (var element in favoritos) {
     String? comarca = element["comarca"];
-
     if (comarca != null) {
       String url = "https://node-comarques-rest-server-production.up.railway.app/api/comarques/infoComarca/$comarca";
 
       try {
-        http.Response response = await http.get(Uri.parse(url));
+        final response = await http.get(Uri.parse(url));
 
         if (response.statusCode == HttpStatus.ok) {
           String body = utf8.decode(response.bodyBytes);
           final result = jsonDecode(body);
           listaFavoritos.add(result);
         } else {
-          print("Error al obtener datos de la API para $comarca");
+          print("Error al obtener datos de la API para $comarca - Código: ${response.statusCode}");
         }
       } catch (e) {
         print("Error al conectar con la API: $e");
